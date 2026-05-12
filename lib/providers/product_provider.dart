@@ -1,61 +1,92 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/product.dart';
 
 class ProductProvider with ChangeNotifier {
-  final List<Product> _products = [
-    Product(
-      id: 1,
-      name: "iPhone 15 Pro",
-      price: 1200,
-      image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
-      category: "Apple",
-    ),
-    Product(
-      id: 2,
-      name: "Samsung S24 Ultra",
-      price: 1400,
-      image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97",
-      category: "Samsung",
-    ),
-    Product(
-      id: 3,
-      name: "Xiaomi 14",
-      price: 850,
-      image: "https://images.unsplash.com/photo-1580910051074-3eb694886505",
-      category: "Xiaomi",
-    ),
-    Product(
-      id: 4,
-      name: "OnePlus 12",
-      price: 900,
-      image: "https://images.unsplash.com/photo-1605236453806-6ff36851218e",
-      category: "OnePlus",
-    ),
-    Product(
-      id: 5,
-      name: "iPhone 14 Pro",
-      price: 1100,
-      image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0",
-      category: "Apple",
-    ),
-    Product(
-      id: 6,
-      name: "Google Pixel 8",
-      price: 950,
-      image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab",
-      category: "Google",
-    ),
-  ];
+  List<Product> _products = [];
+  List<Product> _cart = [];
 
-  final List<Product> _cart = [];
+  bool isOffline = false;
 
   List<Product> get products => _products;
+
   List<Product> get cart => _cart;
 
   List<Product> get favorites => _products.where((p) => p.isFavorite).toList();
 
-  void toggleFavorite(Product product) {
+  int get cartCount => _cart.length;
+
+  ProductProvider() {
+    fetchProducts();
+  }
+
+  Future<void> fetchProducts() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'https://raw.githubusercontent.com/AADNRHO/phonenest/refs/heads/main/phones.json'),
+      );
+
+      if (response.statusCode == 200) {
+        final List data = json.decode(response.body);
+
+        _products = data.map((item) => Product.fromJson(item)).toList();
+
+        final favoriteIds = prefs.getStringList('favorites') ?? [];
+
+        for (var product in _products) {
+          if (favoriteIds.contains(product.id.toString())) {
+            product.isFavorite = true;
+          }
+        }
+
+        prefs.setString(
+          'cached_products',
+          response.body,
+        );
+
+        isOffline = false;
+      }
+    } catch (e) {
+      final cachedData = prefs.getString('cached_products');
+
+      if (cachedData != null) {
+        final List data = json.decode(cachedData);
+
+        _products = data.map((item) => Product.fromJson(item)).toList();
+
+        final favoriteIds = prefs.getStringList('favorites') ?? [];
+
+        for (var product in _products) {
+          if (favoriteIds.contains(product.id.toString())) {
+            product.isFavorite = true;
+          }
+        }
+
+        isOffline = true;
+      }
+    }
+
+    notifyListeners();
+  }
+
+  void toggleFavorite(Product product) async {
     product.isFavorite = !product.isFavorite;
+
+    final prefs = await SharedPreferences.getInstance();
+
+    List<String> favoriteIds =
+        favorites.map((product) => product.id.toString()).toList();
+
+    prefs.setStringList(
+      'favorites',
+      favoriteIds,
+    );
+
     notifyListeners();
   }
 
@@ -68,6 +99,4 @@ class ProductProvider with ChangeNotifier {
     _cart.remove(product);
     notifyListeners();
   }
-
-  int get cartCount => _cart.length;
 }
