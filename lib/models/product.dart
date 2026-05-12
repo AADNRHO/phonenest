@@ -14,4 +14,24 @@ class Product {
     required this.category,
     this.isFavorite = false,
   });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'],
+      name: json['title'],
+      price: (json['price']).toDouble(),
+      image: json['image'],
+      category: json['category'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': name,
+      'price': price,
+      'image': image,
+      'category': category,
+    };
+  }
 }
