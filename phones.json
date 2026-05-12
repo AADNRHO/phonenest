@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "title": "iPhone 15 Pro",
+    "price": 1200,
+    "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
+    "category": "Apple"
+  },
+  {
+    "id": 2,
+    "title": "Samsung S24 Ultra",
+    "price": 1400,
+    "image": "https://images.unsplash.com/photo-1598327105666-5b89351aff97",
+    "category": "Samsung"
+  },
+  {
+    "id": 3,
+    "title": "Xiaomi 14",
+    "price": 850,
+    "image": "https://images.unsplash.com/photo-1580910051074-3eb694886505",
+    "category": "Xiaomi"
+  },
+  {
+    "id": 4,
+    "title": "OnePlus 12",
+    "price": 900,
+    "image": "https://images.unsplash.com/photo-1605236453806-6ff36851218e",
+    "category": "OnePlus"
+  },
+  {
+    "id": 5,
+    "title": "iPhone 14 Pro",
+    "price": 1100,
+    "image": "https://images.unsplash.com/photo-1565849904461-04a58ad377e0",
+    "category": "Apple"
+  },
+  {
+    "id": 6,
+    "title": "Google Pixel 8",
+    "price": 950,
+    "image": "https://images.unsplash.com/photo-1592750475338-74b7b21085ab",
+    "category": "Google"
+  },
+  {
+    "id": 7,
+    "title": "Samsung Z Fold 5",
+    "price": 1700,
+    "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf",
+    "category": "Samsung"
+  },
+  {
+    "id": 8,
+    "title": "Huawei P60 Pro",
+    "price": 980,
+    "image": "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5",
+    "category": "Huawei"
+  }
+]
